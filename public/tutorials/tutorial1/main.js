@@ -1,4 +1,8 @@
+import * as THREE from "./../../thirdparty/threejs-math.module.js";
 
 export function main() {
-    console.log("This is tutorial 1")
+
+    const m = new THREE.Matrix4();
+
+    console.log("This should have some rendering code")
 }
