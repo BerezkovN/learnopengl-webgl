@@ -1,5 +1,6 @@
 import * as tutorial1 from "./tutorials/tutorial1/main.js"
 import * as tutorial2 from "./tutorials/tutorial2/main.js"
+import * as tutorial3 from "./tutorials/tutorial3/main.js"
 import * as THREE from "./thirdparty/threejs-math.module.js";
 
 console.log("Hello");
@@ -24,7 +25,7 @@ let then = 0;
 
 function drawScene(now) {
 
-  tutorial2.main(gl, now - then);
+  tutorial3.main(gl, now - then);
   window.requestAnimationFrame(drawScene);
   then = now;
 }
