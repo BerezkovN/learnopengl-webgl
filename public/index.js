@@ -30,6 +30,7 @@ function drawScene(now) {
   then = now;
 }
 
+tutorial3.init(gl);
 drawScene(0);
 
 // while (true) {

@@ -14,6 +14,9 @@ const fsSource = `
 
 let time = 0;
 let vaoExtension;
+let shaderProgram;
+let VAO;
+let VBO;
 
 function initVAOExtension(gl) {
     
@@ -38,12 +41,9 @@ function initVAOExtension(gl) {
 
 /** 
  * @param {*} inGL WebGL context
- * @param {*} deltaTime delta time in ms
  */
-export function main(inGL, deltaTime) {
-
-    time += deltaTime;
-
+export function init(inGL)
+{
     const gl = inGL;
     const vertexShader = gl.createShader(gl.VERTEX_SHADER);
     const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -65,7 +65,7 @@ export function main(inGL, deltaTime) {
         gl.deleteShader(fragmentShader);
     }
 
-    const shaderProgram = gl.createProgram();
+    shaderProgram = gl.createProgram();
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
@@ -91,13 +91,13 @@ export function main(inGL, deltaTime) {
     ];
 
     // Get the Vertex Array Object extension and create/bind a VAO  
-    const ext = initVAOExtension(inGL);
-    const VAO = ext.createVertexArrayOES();
+    vaoExtension = initVAOExtension(inGL);
+    VAO = vaoExtension.createVertexArrayOES();
 
     // Start setting up VAO  
-    ext.bindVertexArrayOES(VAO);  
+    vaoExtension.bindVertexArrayOES(VAO);  
 
-    const VBO = gl.createBuffer();
+    VBO = gl.createBuffer();
     const EBO = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -116,7 +116,25 @@ export function main(inGL, deltaTime) {
     // You can unbind the VAO afterwards so other VAO calls won't accidentally modify this VAO, but this rarely happens. Modifying other
     // VAOs requires a call to glBindVertexArray anyways so we generally don't unbind VAOs (nor VBOs) when it's not directly necessary.
     // Finised setting up VAO  
-    ext.bindVertexArrayOES(null);  
+    vaoExtension.bindVertexArrayOES(null);  
+}
+
+/** 
+ * @param {*} inGL WebGL context
+ * @param {*} deltaTime delta time in ms
+ */
+export function main(inGL, deltaTime) {
+
+    time += deltaTime;
+    const gl = inGL;
+    const vertices = [
+        Math.sin(time / 1000), 0.5, 0.0,  // top right
+        0.5, -0.5, 0.0,  // bottom right
+        -0.5, -0.5, 0.0,  // bottom left
+        -0.5, 0.5, 0.0   // top left 
+    ];
+    gl.bindBuffer(gl.ARRAY_BUFFER, VBO);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
     // Set clear color to black, fully opaque
     gl.clearColor(0.2, 0.3, 0.3, 1.0);
@@ -124,8 +142,8 @@ export function main(inGL, deltaTime) {
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.useProgram(shaderProgram);
-    ext.bindVertexArrayOES(VAO);
+    vaoExtension.bindVertexArrayOES(VAO);
     gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
 
-    ext.bindVertexArrayOES(null);  
+    vaoExtension.bindVertexArrayOES(null);  
 }

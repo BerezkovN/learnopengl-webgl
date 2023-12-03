@@ -18,6 +18,8 @@ const fsSource = `
 
 let time = 0;
 let vaoExtension;
+let shaderProgram;
+let VAO;
 
 function initVAOExtension(gl) {
     
@@ -42,9 +44,9 @@ function initVAOExtension(gl) {
 
 /** 
  * @param {*} inGL WebGL context
- * @param {*} deltaTime delta time in ms
  */
-export function main(inGL, deltaTime) {
+export function init(inGL)
+{
     const gl = inGL;
     const vertexShader = gl.createShader(gl.VERTEX_SHADER);
     const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
@@ -66,7 +68,7 @@ export function main(inGL, deltaTime) {
         gl.deleteShader(fragmentShader);
     }
 
-    const shaderProgram = gl.createProgram();
+    shaderProgram = gl.createProgram();
     gl.attachShader(shaderProgram, vertexShader);
     gl.attachShader(shaderProgram, fragmentShader);
     gl.linkProgram(shaderProgram);
@@ -88,11 +90,11 @@ export function main(inGL, deltaTime) {
     ];
 
     // Get the Vertex Array Object extension and create/bind a VAO  
-    const ext = initVAOExtension(inGL);
-    const VAO = ext.createVertexArrayOES();
+    vaoExtension = initVAOExtension(inGL);
+    VAO = vaoExtension.createVertexArrayOES();
 
     // Start setting up VAO  
-    ext.bindVertexArrayOES(VAO);  
+    vaoExtension.bindVertexArrayOES(VAO);  
 
     const VBO = gl.createBuffer();
 
@@ -114,14 +116,23 @@ export function main(inGL, deltaTime) {
     // Finised setting up VAO  
     //ext.bindVertexArrayOES(null);  
 
+}
+
+/** 
+ * @param {*} inGL WebGL context
+ * @param {*} deltaTime delta time in ms
+ */
+export function main(inGL, deltaTime) {
+    const gl = inGL;
+
     // Set clear color to black, fully opaque
     gl.clearColor(0.2, 0.3, 0.3, 1.0);
     // Clear the color buffer with specified clear color
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     gl.useProgram(shaderProgram);
-    ext.bindVertexArrayOES(VAO);
+    vaoExtension.bindVertexArrayOES(VAO);
     gl.drawArrays(gl.TRIANGLES, 0, 3)
 
-    ext.bindVertexArrayOES(null);  
+    vaoExtension.bindVertexArrayOES(null);  
 }
