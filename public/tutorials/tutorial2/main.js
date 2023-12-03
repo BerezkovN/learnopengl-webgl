@@ -16,6 +16,34 @@ const fsSource = `
   }
 `;
 
+let time = 0;
+let vaoExtension;
+
+function initVAOExtension(gl) {
+    
+    if (vaoExtension !== undefined) {
+        return vaoExtension;
+    }
+
+    vaoExtension = gl.getExtension("OES_vertex_array_object"); // Vendor prefixes may apply!  
+    if(vaoExtension === null)
+    {
+        alert(
+            "OES_vertex_array_object ext is not supported"
+          );
+    }
+    else
+    {
+        console.log("Successfully loaded OES_vertex_array_object extension")
+    }
+
+    return vaoExtension;
+}
+
+/** 
+ * @param {*} inGL WebGL context
+ * @param {*} deltaTime delta time in ms
+ */
 export function main(inGL, deltaTime) {
     const gl = inGL;
     const vertexShader = gl.createShader(gl.VERTEX_SHADER);
@@ -60,17 +88,7 @@ export function main(inGL, deltaTime) {
     ];
 
     // Get the Vertex Array Object extension and create/bind a VAO  
-    const ext = gl.getExtension("OES_vertex_array_object"); // Vendor prefixes may apply!  
-    if(ext === null)
-    {
-        alert(
-            "OES_vertex_array_object ext is not supported"
-          );
-    }
-    else
-    {
-        console.log("Successfully loaded OES_vertex_array_object extension")
-    }
+    const ext = initVAOExtension(inGL);
     const VAO = ext.createVertexArrayOES();
 
     // Start setting up VAO  

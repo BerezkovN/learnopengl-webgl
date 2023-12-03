@@ -24,7 +24,7 @@ let then = 0;
 
 function drawScene(now) {
 
-  tutorial1.main(gl, now - then);
+  tutorial2.main(gl, now - then);
   window.requestAnimationFrame(drawScene);
   then = now;
 }
