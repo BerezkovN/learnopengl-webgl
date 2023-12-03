@@ -1,4 +1,5 @@
 import * as tutorial1 from "./tutorials/tutorial1/main.js"
+import * as tutorial2 from "./tutorials/tutorial2/main.js"
 import * as THREE from "./thirdparty/threejs-math.module.js";
 
 console.log("Hello");
