@@ -18,7 +18,17 @@ else
   console.log("Successfully initialized WebGL context ");
 }
 
-tutorial1.main(gl);
+let then = 0;
+
+
+function drawScene(now) {
+
+  tutorial1.main(gl, now - then);
+  window.requestAnimationFrame(drawScene);
+  then = now;
+}
+
+drawScene(0);
 
 // while (true) {
 
