@@ -110,9 +110,33 @@ export function init(inGL)
     uSamplerLocation = gl.getUniformLocation(shaderProgram, "uSampler");
     texture = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, texture);
+    // Because images have to be downloaded over the internet
+    // they might take a moment until they are ready.
+    // Until then put a single pixel in the texture so we can
+    // use it immediately. When the image has finished downloading
+    // we'll update the texture with the contents of the image.
+    const level = 0;
+    const internalFormat = gl.RGB;
+    const width = 1;
+    const height = 1;
+    const border = 0;
+    const srcFormat = gl.RGB;
+    const srcType = gl.UNSIGNED_BYTE;
+    const pixel = new Uint8Array([0, 0, 255]); // opaque blue
+    gl.texImage2D(
+        gl.TEXTURE_2D,
+        level,
+        internalFormat,
+        width,
+        height,
+        border,
+        srcFormat,
+        srcType,
+        pixel,
+    );
 
     image = new Image();
-    image.src = "./tutorials/tutorial3/wall.jpg";
+    image.setAttribute('crossorigin', 'anonymous');
     image.onload = () => {
         gl.bindTexture(gl.TEXTURE_2D, texture);
         gl.texImage2D(
@@ -143,6 +167,8 @@ export function init(inGL)
             gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
         }
     }
+    image.src = "https://th.bing.com/th/id/R.0585d3fd1373c0048ba3a54c67138f93?rik=bLQrCK%2bHhnQsfg&pid=ImgRaw&r=0";
+
 }
 
 function initVAOExtension(gl) {
